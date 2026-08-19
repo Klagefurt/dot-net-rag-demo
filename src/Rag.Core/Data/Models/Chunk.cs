@@ -25,7 +25,7 @@ namespace Rag.Core.Data.Models
         public int ChunkIndex { get; set; }
 
         [Column("embedding", TypeName = "vector(768)")]
-        public Vector? Enbedding { get; set; }
+        public Vector? Embedding { get; set; }
         
         [Column("created_at")]
         public DateTime CreatedAt {get; set;} = DateTime.UtcNow;

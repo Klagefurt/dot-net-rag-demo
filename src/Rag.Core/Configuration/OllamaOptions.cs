@@ -6,8 +6,10 @@ namespace Rag.Core.Configuration
     {
         [Required(AllowEmptyStrings = false)]
         public required string BaseUrl { get; set; }
+
         [Required(AllowEmptyStrings = false)]
         public required string EmbeddingModel {get; set;}
+        
         [Required(AllowEmptyStrings = false)]
         public required string LlmModel { get; set; }
     }
