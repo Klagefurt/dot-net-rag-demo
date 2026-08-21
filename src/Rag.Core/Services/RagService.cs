@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Rag.Core.Services
 {
-    internal class RagServices(AppDbContext dbContext, 
+    internal class RagService(AppDbContext dbContext, 
         OllamaEmbeddingService embeddingService,
         OllamaLlmService llmService)
     {
