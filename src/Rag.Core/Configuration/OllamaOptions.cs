@@ -4,13 +4,13 @@ namespace Rag.Core.Configuration
 {
     internal class OllamaOptions
     {
-        [Required(AllowEmptyStrings = false)]
-        public required string BaseUrl { get; set; }
-
-        [Required(AllowEmptyStrings = false)]
-        public required string EmbeddingModel {get; set;}
+        [Required(AllowEmptyStrings = false, ErrorMessage = "BaserUrl is required")]
+        public string BaseUrl {get; set;} = "http://localhost:11434";
         
-        [Required(AllowEmptyStrings = false)]
-        public required string LlmModel { get; set; }
+        [Required(AllowEmptyStrings = false, ErrorMessage = "EmbeddingModel is required")]
+        public string EmbeddingModel {get; set;} = "nomic-embed-text";
+        
+        [Required(AllowEmptyStrings = false, ErrorMessage = "LlmModel is required")]
+        public string LlmModel { get; set; } = "llama3.2";
     }
 }
