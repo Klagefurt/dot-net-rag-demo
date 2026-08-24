@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Rag.Core.Configuration;
 using Rag.Core.Data;
+using Rag.Core.Services;
 
 namespace Rag.Core
 {
@@ -19,10 +20,6 @@ namespace Rag.Core
         {
             // 1. Ollama options
             var ollamaSection = configuration.GetSection("Ollama");
-
-            /* services.Configure<OllamaOptions>(ollamaSection)
-                .ValidateDataAnnotations(); */
-
             services.AddOptions<OllamaOptions>()
                 .Bind(ollamaSection)
                 .ValidateDataAnnotations()
@@ -35,7 +32,17 @@ namespace Rag.Core
             services.AddDbContext<AppDbContext>(opts => 
                 opts.UseNpgsql(connectionString, o => o.UseVector()));
 
+            var hostSection = configuration.GetSection("HostSettings");
+            services.AddOptions<HostSettings>()
+                .Bind(hostSection)
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
+            // 3. Ollama http clients
+            // Not best solution, but not to install here Microsoft.Extemsions.Http package
+            // and to avoid version conflict under .Net 8.0
+            services.AddTransient<OllamaEmbeddingService>();
+            services.AddTransient<OllamaLlmService>();
 
             return services;
         }
