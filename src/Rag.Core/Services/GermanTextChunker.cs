@@ -7,7 +7,7 @@ namespace Rag.Core.Services
     {
         private readonly ChunkingOptions _options = options.Value;
 
-        public IEnumerable<string> Chunk(string text)
+        public List<string> Chunk(string text)
         {
             var result = new List<string>();
             if (_options.ChunkSize <= _options.Overlap) 

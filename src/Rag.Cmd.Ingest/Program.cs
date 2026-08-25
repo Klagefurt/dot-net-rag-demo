@@ -1,2 +1,9 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿
+using Microsoft.Extensions.Hosting;
+using Rag.Core;
+
+var host = Host.CreateDefaultBuilder(args)
+  .ConfigureServices((context, services) =>
+  {
+    services.AddInfrastructure(context.Configuration);
+  });
