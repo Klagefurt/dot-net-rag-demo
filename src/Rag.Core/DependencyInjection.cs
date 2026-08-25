@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Pgvector.EntityFrameworkCore;
 using Rag.Core.Configuration;
 using Rag.Core.Data;
 using Rag.Core.Services;
@@ -43,6 +44,12 @@ namespace Rag.Core
             // and to avoid version conflict under .Net 8.0
             services.AddTransient<OllamaEmbeddingService>();
             services.AddTransient<OllamaLlmService>();
+
+            // 4. Add chunker service
+            services.AddSingleton<GermanTextChunker>();
+
+            // 5. Add Rag Service
+            services.AddScoped<RagService>();
 
             return services;
         }
