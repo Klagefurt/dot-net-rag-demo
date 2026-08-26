@@ -4,18 +4,16 @@ using Rag.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Set base path
+// Set base path and read configuration from appsettings.json
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
 
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-// Add environmental variables
-//builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
-//builder.Configuration.AddEnvironmentVariables();
-
+// Add base infrastructure (db, chunker, services)
 builder.Services.AddInfrastructure(builder.Configuration);
 
-builder.Services.AddHttpClient<OllamaEmbeddingService>((sp, client) =>
+// Configure http clients on transport level
+builder.Services.AddHttpClient<IOllamaEmbeddingService, OllamaEmbeddingService>((sp, client) =>
 {
   var config = sp.GetRequiredService<IConfiguration>();
 
@@ -26,7 +24,7 @@ builder.Services.AddHttpClient<OllamaEmbeddingService>((sp, client) =>
 })
 .AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(2)));
 
-builder.Services.AddHttpClient<OllamaLlmService>((sp, client) =>
+builder.Services.AddHttpClient<IOllamaLlmService, OllamaLlmService>((sp, client) =>
 {
   var config = sp.GetRequiredService<IConfiguration>();
 
@@ -36,9 +34,12 @@ builder.Services.AddHttpClient<OllamaLlmService>((sp, client) =>
   client.BaseAddress = new Uri(baseUrl);
 });
 
-builder.Services.AddControllers();
+// Configure health check
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+  ?? throw new InvalidOperationException("No DefaultConnection!");
+builder.Services.AddHealthChecks().AddNpgSql(connectionString);
 
-// Add swagger only for development stage
+// Define swagger only for development stage
 if (builder.Environment.IsDevelopment())
 {
   builder.Services.AddEndpointsApiExplorer();
@@ -47,8 +48,7 @@ if (builder.Environment.IsDevelopment())
 
 var app = builder.Build();
 
-// MIDDLEWARE
-
+// MIDDLEWARE layer
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
@@ -57,8 +57,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// Add health check
+app.MapHealthChecks("/health");
 
-app.MapControllers();
+// Minimal API section
+// TODO: implement!
 
-app.Run();
+app.Run("http://localhost:8080");

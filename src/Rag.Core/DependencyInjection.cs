@@ -34,11 +34,9 @@ namespace Rag.Core
                 .ValidateOnStart();
 
             // 3. Ollama http clients
-            // Not best solution!
-            // To avoid installing here Microsoft.Extemsions.Http package
-            // and to avoid version conflict under .Net 8.0
-            services.AddTransient<OllamaEmbeddingService>();
-            services.AddTransient<OllamaLlmService>();
+            // We register them in Rag.Cmd.Api project
+            services.AddTransient<IOllamaEmbeddingService, OllamaEmbeddingService>();
+            services.AddTransient<IOllamaLlmService, OllamaLlmService>();
 
             // 4. Add chunker service
             services.AddSingleton<GermanTextChunker>();

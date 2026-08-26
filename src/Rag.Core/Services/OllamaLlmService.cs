@@ -5,7 +5,12 @@ using Rag.Core.Configuration;
 
 namespace Rag.Core.Services
 {
-    internal class OllamaLlmService(HttpClient httpClient, IOptions<OllamaOptions> options)
+    public interface IOllamaLlmService
+    {
+        Task<string> GetAnswerAsync(string prompt);
+    }
+
+    internal class OllamaLlmService(HttpClient httpClient, IOptions<OllamaOptions> options) : IOllamaLlmService
     {
         private readonly OllamaOptions _options = options.Value;
 

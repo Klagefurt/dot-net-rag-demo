@@ -5,7 +5,12 @@ using Rag.Core.Configuration;
 
 namespace Rag.Core.Services
 {
-    internal class OllamaEmbeddingService(HttpClient httpClient, IOptions<OllamaOptions> options)
+    public interface IOllamaEmbeddingService
+    {
+        Task<float[]> GetEmbeddingAsync(string text);
+    }
+
+    internal class OllamaEmbeddingService(HttpClient httpClient, IOptions<OllamaOptions> options) : IOllamaEmbeddingService
     {
         private readonly OllamaOptions _options = options.Value;
 

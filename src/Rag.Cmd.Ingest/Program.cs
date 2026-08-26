@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Rag.Core;
 
 var host = Host.CreateDefaultBuilder(args)
