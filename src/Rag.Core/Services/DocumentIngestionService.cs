@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Rag.Core.Data;
 using Rag.Core.Data.Models;
@@ -11,7 +7,7 @@ namespace Rag.Core.Services
     internal class DocumentIngestionService(
         AppDbContext dbContext, 
         GermanTextChunker chunker, 
-        OllamaEmbeddingService service, 
+        OllamaEmbeddingService embeddingService, 
         ILogger<DocumentIngestionService> logger)
     {
         public async Task IngestDirectoryAsync(string docsDir)
@@ -59,7 +55,23 @@ namespace Rag.Core.Services
                     string chunkContent = textChunks[i];
                     logger.LogInformation("Generiere Embedding for Chunk N{i}", i);
 
+                    // 3. Get a 768-dimensional vector from nomic-embed-text model
+                    float[]? rawVector = await embeddingService.GetEmbeddingAsync(chunkContent);
+
+                    // 4. Save chunk to db
+                    var chunk = new Chunk
+                    {
+                        DocumentId = doc.Id,
+                        Content = chunkContent,
+                        ChunkIndex = i,
+                        Embedding = new Pgvector.Vector(rawVector)
+                    };
+
+                    dbContext.Chunks.Add(chunk);
                 }
+
+                await dbContext.SaveChangesAsync();
+                logger.LogInformation("[ERFOLG] Dokument '{Title}' wurde erfolgreich in PostgreSQL gespeichert!", title);
             }
         }
     }

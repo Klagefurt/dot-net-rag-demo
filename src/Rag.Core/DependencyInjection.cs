@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Pgvector.EntityFrameworkCore;
 using Rag.Core.Configuration;
 using Rag.Core.Data;
 using Rag.Core.Services;
@@ -40,7 +34,8 @@ namespace Rag.Core
                 .ValidateOnStart();
 
             // 3. Ollama http clients
-            // Not best solution, but not to install here Microsoft.Extemsions.Http package
+            // Not best solution!
+            // To avoid installing here Microsoft.Extemsions.Http package
             // and to avoid version conflict under .Net 8.0
             services.AddTransient<OllamaEmbeddingService>();
             services.AddTransient<OllamaLlmService>();
@@ -50,6 +45,9 @@ namespace Rag.Core
 
             // 5. Add Rag Service
             services.AddScoped<RagService>();
+
+            // 6. Add document ingestion service
+            services.AddScoped<DocumentIngestionService>();
 
             return services;
         }
