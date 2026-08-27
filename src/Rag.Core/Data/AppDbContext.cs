@@ -5,6 +5,11 @@ namespace Rag.Core.Data
 {
     internal class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+            
+        }
+
         internal DbSet<Chunk> Chunks => Set<Chunk>();
         internal DbSet<Document> Documents =>  Set<Document>();
 

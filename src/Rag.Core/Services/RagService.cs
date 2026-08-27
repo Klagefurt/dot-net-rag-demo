@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Rag.Core.Services
 {
     internal class RagService(AppDbContext dbContext, 
-        OllamaEmbeddingService embeddingService,
-        OllamaLlmService llmService)
+        IOllamaEmbeddingService embeddingService,
+        IOllamaLlmService llmService)
     {
         public async Task<RagResult> QueryAsync(string question, int topK = 5)
         {

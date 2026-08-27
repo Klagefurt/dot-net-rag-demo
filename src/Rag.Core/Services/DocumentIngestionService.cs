@@ -7,7 +7,7 @@ namespace Rag.Core.Services
     internal class DocumentIngestionService(
         AppDbContext dbContext, 
         GermanTextChunker chunker, 
-        OllamaEmbeddingService embeddingService, 
+        IOllamaEmbeddingService embeddingService, 
         ILogger<DocumentIngestionService> logger)
     {
         public async Task IngestDirectoryAsync(string docsDir)

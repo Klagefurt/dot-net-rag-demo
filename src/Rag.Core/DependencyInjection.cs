@@ -35,8 +35,8 @@ namespace Rag.Core
 
             // 3. Ollama http clients
             // We register them in Rag.Cmd.Api project
-            services.AddTransient<IOllamaEmbeddingService, OllamaEmbeddingService>();
-            services.AddTransient<IOllamaLlmService, OllamaLlmService>();
+            /* services.AddScoped<IOllamaEmbeddingService, OllamaEmbeddingService>();
+            services.AddScoped<IOllamaLlmService, OllamaLlmService>(); */
 
             // 4. Add chunker service
             services.AddSingleton<GermanTextChunker>();
