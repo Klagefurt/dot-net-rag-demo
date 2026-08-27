@@ -1,13 +1,9 @@
+using Microsoft.AspNetCore.Mvc;
 using Polly;
 using Rag.Core;
 using Rag.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Set base path and read configuration from appsettings.json
-builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
-
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
 // Add base infrastructure (db, chunker, services)
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -61,6 +57,15 @@ app.UseHttpsRedirection();
 app.MapHealthChecks("/health");
 
 // Minimal API section
-// TODO: implement!
+app.MapPost("/api/query", async ([FromBody]QueryRequest request, [FromServices]RagService ragService) =>
+{
+  if (string.IsNullOrWhiteSpace(request.Question))
+    return Results.BadRequest(new { error = "Question cannot be empty" });
+
+  var result = await ragService.QueryAsync(request.Question);
+  return Results.Ok(result);
+});
 
 app.Run("http://localhost:8080");
+
+internal record QueryRequest(string Question);
