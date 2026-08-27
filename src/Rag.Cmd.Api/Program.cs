@@ -13,7 +13,7 @@ builder.Services.AddHttpClient<IOllamaEmbeddingService, OllamaEmbeddingService>(
 {
   var config = sp.GetRequiredService<IConfiguration>();
 
-  string baseUrl = config["Ollama:BaseUrl"] ?? 
+  string baseUrl = config["HostSettings:BaseUrl"] ?? 
     throw new InvalidOperationException("BaseUrl is not configured in appsettings.json");
 
   client.BaseAddress = new Uri(baseUrl);
@@ -24,7 +24,7 @@ builder.Services.AddHttpClient<IOllamaLlmService, OllamaLlmService>((sp, client)
 {
   var config = sp.GetRequiredService<IConfiguration>();
 
-  string baseUrl = config["Ollama:BaseUrl"] ?? 
+  string baseUrl = config["HostSettings:BaseUrl"] ?? 
     throw new InvalidOperationException("BaseUrl is not configured in appsettings.json");
 
   client.BaseAddress = new Uri(baseUrl);

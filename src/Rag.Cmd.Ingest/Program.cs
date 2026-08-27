@@ -15,7 +15,7 @@ services.AddLogging(builder => builder.AddConsole());
 
 services.AddInfrastructure(configuration);
 
-string baseUrl = configuration["Ollama:baseUrl"] 
+string baseUrl = configuration["HostSettings:baseUrl"] 
   ?? throw new InvalidOperationException("BaseUrl must be filled!");
 
 services.AddHttpClient<IOllamaEmbeddingService, OllamaEmbeddingService>((client) =>
