@@ -33,10 +33,12 @@ namespace Rag.Core
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-            // 3. Ollama http clients
-            // We register them in Rag.Cmd.Api project
-            /* services.AddScoped<IOllamaEmbeddingService, OllamaEmbeddingService>();
-            services.AddScoped<IOllamaLlmService, OllamaLlmService>(); */
+            // 3. Chunking options
+            var chunkingSection = configuration.GetSection("Chunking");
+            services.AddOptions<ChunkingOptions>()
+                .Bind(chunkingSection)
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
 
             // 4. Add chunker service
             services.AddSingleton<GermanTextChunker>();
